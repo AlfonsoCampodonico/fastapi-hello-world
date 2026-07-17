@@ -1,13 +1,8 @@
-from fastapi import FastAPI
+"""Entrypoint so ``uvicorn main:app`` (Laravel Cloud's auto-detected default)
+keeps working. The application itself lives in the ``app`` package — see
+``app/main.py``.
+"""
 
-app = FastAPI(title="FastAPI Hello World")
+from app.main import app
 
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
-
-
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
+__all__ = ["app"]

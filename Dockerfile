@@ -7,6 +7,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY main.py .
+COPY app ./app
 
 # Cloud platforms inject the port via $PORT; default to 8000 locally
 ENV PORT=8000
