@@ -47,6 +47,15 @@ def test_missing_greeting_returns_404():
     assert "not found" in resp.json()["detail"].lower()
 
 
+def test_redoc_uses_a_valid_pinned_cdn():
+    resp = client.get("/redoc")
+    assert resp.status_code == 200
+    # FastAPI's default `redoc@next` tag 404s on the CDN (blank page); we pin a
+    # real release instead.
+    assert "redoc@next" not in resp.text
+    assert "redoc@2" in resp.text
+
+
 def test_openapi_schema_is_exposed():
     resp = client.get("/openapi.json")
     assert resp.status_code == 200
