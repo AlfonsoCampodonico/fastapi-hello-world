@@ -12,7 +12,8 @@ COPY main.py .
 ENV PORT=8000
 EXPOSE 8000
 
-# gunicorn binds [::] (dual-stack: serves both IPv6 and IPv4), which uvicorn's
-# own --host :: does not (it forces IPv6-only). Dual-stack is required on IPv6
-# clusters where the health probe uses the pod's IPv6 address.
-CMD ["sh", "-c", "gunicorn main:app -k uvicorn.workers.UvicornWorker --bind [::]:${PORT}"]
+# --host '' binds all interfaces on BOTH families (separate IPv4 + IPv6 sockets),
+# i.e. dual-stack. --host :: is IPv6-only and 0.0.0.0 is IPv4-only. Dual-stack is
+# required on IPv6 clusters where the health probe uses the pod's IPv6 address
+# while the in-pod proxy reaches the app over IPv4 loopback.
+CMD ["sh", "-c", "uvicorn main:app --host '' --port ${PORT}"]
