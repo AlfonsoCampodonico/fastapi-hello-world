@@ -39,7 +39,14 @@ The app reads the port from the `$PORT` environment variable (defaulting to `800
 The start command is:
 
 ```bash
-uvicorn main:app --host 0.0.0.0 --port ${PORT}
+gunicorn main:app -k uvicorn.workers.UvicornWorker --bind [::]:${PORT}
 ```
+
+> **Why gunicorn with `--bind [::]`?** On IPv6 / dual-stack hosts (e.g. Laravel
+> Cloud), the platform health probe connects to the pod's IPv6 address, while the
+> in-pod proxy reaches the app over IPv4 loopback. `gunicorn --bind [::]` binds
+> **dual-stack** (serves both), whereas `uvicorn --host ::` binds IPv6-only and
+> `uvicorn --host 0.0.0.0` binds IPv4-only — so neither uvicorn form satisfies
+> both paths. gunicorn (with the uvicorn worker) does.
 
 On Laravel Cloud this matches the auto-detected default start command (`uvicorn main:app --host 0.0.0.0 --port $PORT`), so no override is needed.
