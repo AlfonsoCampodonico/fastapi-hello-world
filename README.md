@@ -17,7 +17,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-uvicorn app.main:app --reload
+uvicorn main:app --reload
 ```
 
 Then open http://127.0.0.1:8000 — or http://127.0.0.1:8000/docs for the auto-generated API docs.
@@ -39,5 +39,7 @@ The app reads the port from the `$PORT` environment variable (defaulting to `800
 The start command is:
 
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
+uvicorn main:app --host 0.0.0.0 --port ${PORT}
 ```
+
+On Laravel Cloud this matches the auto-detected default start command (`uvicorn main:app --host 0.0.0.0 --port $PORT`), so no override is needed.
